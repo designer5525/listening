@@ -60,17 +60,38 @@ async function startLearning() {
 function speak(text, lang) {
     return new Promise((resolve) => {
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang;
+        
+        // 取得系統所有可用的聲音
+        const voices = window.speechSynthesis.getVoices();
+        
+        if (lang === 'zh-CN' || lang === 'zh-Hant') {
+            // 優先尋找高品質的中文聲音
+            const zhVoice = voices.find(v => 
+                (v.lang.includes('zh') || v.lang.includes('CN')) && 
+                (v.name.includes('Google') || v.name.includes('Mainland') || v.name.includes('Xiaoxiao'))
+            );
+            if (zhVoice) utterance.voice = zhVoice;
+            
+            utterance.rate = 0.85; // 中文稍微放慢，媽媽聽得更清楚
+            utterance.pitch = 1.0; // 音調保持自然
+        } else {
+            // 英文聲音優化
+            const enVoice = voices.find(v => v.lang.includes('en') && v.name.includes('Google'));
+            if (enVoice) utterance.voice = enVoice;
+            utterance.rate = 0.8; // 英文例句也要慢一點
+        }
+
         utterance.onend = resolve;
-        synth.speak(utterance);
+        
+        // 處理某些瀏覽器語音中斷的臭蟲
+        utterance.onerror = (event) => {
+            console.error('語音錯誤:', event);
+            resolve();
+        };
+
+        window.speechSynthesis.speak(utterance);
     });
 }
-
-// 輔助工具：延遲
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 // 輔助工具：滴滴滴倒數
 async function playCountdown() {
     const beep = document.getElementById('beep-sound');
