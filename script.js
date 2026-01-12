@@ -11,56 +11,39 @@ window.speechSynthesis.onvoiceschanged = () => {
 
 // 2. 主按鈕控制
 async function togglePlay() {
-    const btn = document.getElementById('main-btn');
+    const silentLoop = document.getElementById('silent-loop');
+    // 【關鍵】在點擊瞬間解鎖音訊標籤與語音引擎
+    beep.play().then(() => {
+        beep.pause();
+        beep.currentTime = 0;
+    }).catch(e => console.log("音效預解鎖失敗"));
 
-    // --- 【關鍵 1】立即解鎖語音與音訊 ---
     const silent = new SpeechSynthesisUtterance("");
     synth.speak(silent);
 
-    // 嘗試預熱音效
-    beep.play().then(() => {
-        // 如果是為了保持後台喚醒，我們不立即 pause，而是讓它在循環中自然運作
-        if (!isPlaying) {
-            beep.pause();
-            beep.currentTime = 0;
-        }
-    }).catch(e => console.log("音效解鎖失敗"));
-
+    const btn = document.getElementById('main-btn');
+    
     if (!isPlaying) {
         isPlaying = true;
+        silentLoop.play(); // 啟動背景靜音軌，保住後台權限
         btn.classList.remove('colorful');
         btn.innerHTML = "暫停<br>學習";
         updateStatus("準備中...");
-
-        // --- 【關鍵 2】啟動螢幕常亮 (防止黑屏) ---
-        if ('wakeLock' in navigator) {
-            try {
-                wakeLock = await navigator.wakeLock.request('screen');
-            } catch (err) { console.log("WakeLock 啟動失敗"); }
-        }
-
+        
         // 第一次點擊時載入 CSV
         if (vocabulary.length === 0) {
             await loadCSV();
         }
-
-        // 確保從當前題號開始
+        
         runStudyLoop();
     } else {
-        // --- 【暫停邏輯】 ---
         isPlaying = false;
+        silentLoop.pause();
+        window.speechSynthesis.cancel();
         btn.classList.add('colorful');
         btn.innerHTML = "繼續<br>學習";
         updateStatus("已暫停");
-
-        // 立即停止所有聲音
-        synth.cancel(); 
-        beep.pause();
-        
-        // 釋放螢幕常亮鎖
-        if (wakeLock) {
-            wakeLock.release().then(() => wakeLock = null);
-        }
+        synth.cancel(); // 立即停止發聲
     }
 }
 
