@@ -1,4 +1,5 @@
 word,translation,example
+recruit,招募,"Have you EVER recruited any person under 15 years of age to serve in an armed group?"
 Provide,提供,"Have you EVER provided money / services/ or labor to a terrorist group?"
 Claim,聲稱,"Have you EVER claimed to be a U.S. citizen."
 Registered,登記,"Have you EVER registered to vote."
@@ -25,7 +26,6 @@ threaten,威脅,"Have you EVER threatened to use a weapon against any person?"
 Assassination,暗殺,"Have you EVER committed assassination?"
 Torture,酷刑,"Have you EVER participated in torture?"
 Genocide,種族滅絕,"Have you EVER participated in genocide?"
-recruit,招募,"Have you EVER recruited any person under 15 years / of age / to serve in an armed group?"
 Kill,殺害,"Have you EVER participated in killing or trying to kill any person?"
 Injure,傷害,"Have you EVER intentionally and severely injured any person?"
 Crime,犯罪/違法行為,"Have you EVER committed a crime or offense for which you were NOT arrested?"
