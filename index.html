@@ -1,9 +1,24 @@
-<div class="controls-area">
-    <button class="btn round-btn" onclick="replayAudio()" title="重聽">🔊</button>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>媽媽的單詞聽力練習</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    <button class="btn main-action-btn colorful" id="main-btn" onclick="handleMainAction()">
-        開始<br>面試
-    </button>
+    <div class="container">
+        <button class="btn main-action-btn colorful" id="main-btn" onclick="togglePlay()">
+            開始<br>學習
+        </button>
+        
+        <div id="status-display" class="status-text">點擊按鈕開始</div>
+    </div>
 
-    <button class="btn round-btn" id="btn-star" onclick="toggleBookmark()" title="收藏">☆</button>
-</div>
+    <audio id="beep-sound" src="beep.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
