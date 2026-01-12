@@ -127,30 +127,37 @@ function speak(text, lang) {
     return new Promise((resolve) => {
         if (!isPlaying) { resolve(); return; }
         
-        // 建立物件並賦值給全局變數，防止垃圾回收
+        // 1. 建立物件並賦值給全局變數 activeUtterance
         activeUtterance = new SpeechSynthesisUtterance(text);
         const voices = synth.getVoices();
 
-        // 語音選擇邏輯 (保持不變)
+        // 2. 所有的設定必須針對 activeUtterance
         if (lang === 'zh-CN') {
             const zhVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('zh-CN')) || 
                             voices.find(v => v.lang.includes('zh'));
-            if (zhVoice) utterance.voice = zhVoice;
-            utterance.rate = 0.95;
+            if (zhVoice) activeUtterance.voice = zhVoice;
+            activeUtterance.rate = 0.95;
         } else {
             const enVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('en-US')) || 
                             voices.find(v => v.lang.includes('en-US'));
-            if (enVoice) utterance.voice = enVoice;
-            utterance.rate = 0.9;
+            if (enVoice) activeUtterance.voice = enVoice;
+            activeUtterance.rate = 0.9;
         }
+
+        // 3. 綁定事件監聽
         activeUtterance.onend = () => {
             activeUtterance = null; // 結束後釋放
             resolve();
         };
 
-        utterance.onend = resolve;
-        utterance.onerror = resolve;
-        synth.speak(utterance);
+        activeUtterance.onerror = (e) => {
+            console.error("SpeechSynthesis Error:", e);
+            activeUtterance = null;
+            resolve();
+        };
+
+        // 4. 最後執行朗讀 activeUtterance
+        synth.speak(activeUtterance);
     });
 }
 
