@@ -1,3 +1,85 @@
 word,translation,example
-Apple,蘋果,I eat an apple.
-Banana,香蕉,This is a banana.
+Claim,聲稱,Have you EVER claimed to be a U.S. citizen. 
+Registered,登記,Have you EVER registered to vote.
+Owe taxes,欠稅,I never owe taxes.
+Pay taxes,納稅,I pay taxes every year.
+Provide,提供,Have you EVER sold, provided, or transported weapons?
+update,更新,Do you want us to notify the SSA to update your status?
+Support,支持,Do you support the Constitution and form of Government of the United States?
+Understand,理解,Do you understand the full Oath of Allegiance?
+Vote,投票,Have you EVER registered to vote.
+Willing,願意,Are you willing to take the full Oath of Allegiance to the United States?
+promise,承諾,Do you promise that everything you say is true?
+submit,提交,Has your address changed since submitting your application?
+current,當前的,What's your current address?
+eligible,有資格的,Why are you eligible for naturalization?
+Application,申請,Why are you submit this application?
+eligibility,資格,What's your eligibility for naturalization?
+Bear arms,持武器,Are you willing to bear arms (carry weapons) on behalf of the United States? 
+Terrorist,恐怖分子,"Have you EVER been a member of a terrorist organization?"
+Sabotage,蓄意破壞,"Have you EVER committed any act of sabotage?"
+Weapon,武器,"Did you ever help any group that used a weapon against any person?"
+Explosive,炸藥,"Did you ever use an explosive with intent to harm another person?"
+Kidnapping,綁架,"Have you EVER participated in kidnapping or assassination?"
+threaten,威脅,"Have you EVER threatened to use a weapon against any person?"
+Assassination,暗殺,"Have you EVER committed assassination?"
+Torture,酷刑,"Have you EVER participated in torture?"
+Genocide,種族滅絕,"Have you EVER participated in genocide?"
+recruit,招募,"Have you EVER recruited any person under 15 years of age to serve in an armed group?"
+Kill,殺害,"Have you EVER participated in killing or trying to kill any person?"
+Injure,傷害,"Have you EVER intentionally and severely injured any person?"
+Crime,犯罪/違法行為,"Have you EVER committed a crime or offense for which you were NOT arrested?"
+Illegal drugs,毒品,"Have you EVER sold or smuggled any illegal drugs or narcotics?"
+Smuggled,走私,"Have you EVER smuggled any controlled substances or illegal drugs?"
+enter,進入,"Have you EVER helped anyone to enter the United States illegally?"
+Illegally,非法,"Have you EVER helped anyone to enter the United States illegally?"
+Noncombatant,非戰鬥,"Are you willing to perform noncombatant services in the U.S. armed forces?"
+Organization,組織/團體,"Have you EVER been a member of any organization or association?"
+Communist,共產黨/共產主義,"Have you EVER been a member of the Communist Party?"
+Communism,共產黨/共產主義,"Have you EVER been associated with world communism?"
+Totalitarian,極權政黨,"Have you EVER been associated with a totalitarian party?"
+Totalitarian Party,極權政黨,"Have you EVER been a member of a totalitarian party?"
+Overthrow,推翻,"Have you EVER advocated the overthrow of the U.S. Government by force?"
+Police unit,警察部隊,"Have you EVER served in or participated in any police unit?"
+Public benefit,公共福利,"Have you EVER made any misrepresentation to obtain any public benefit?"
+Constitution,憲法,"Do you support the Constitution and form of Government of the United States?"
+Form of Government,美國政府形式,"Do you support the form of Government of the United States?"
+Oath of Allegiance,效忠誓言,"Do you understand the full Oath of Allegiance to the United States?"
+naturalization,入籍,"Why are you eligible for the naturalization?"
+Prison,監獄,"Have you EVER served in a prison or jail?"
+Jail,監獄,"Have you EVER served in a jail?"
+Labor camp,勞改營/勞動營,"Have you EVER served in a labor camp?"
+Military,軍隊,"Have you EVER served in the U.S. armed forces?"
+Deportation,驅逐出境,"Have you EVER been placed in deportation proceedings?"
+Training,訓練,"Have you EVER received any weapons training or military-type training?"
+Removed,遣返,"Have you EVER been removed or deported from the United States?"
+Detained,被拘留,"Have you EVER been arrested, cited, or detained by any law enforcement officer?"
+Arrested,被逮捕,"Have you EVER been arrested or charged with a crime?"
+Convicted,被定罪,"Have you EVER been convicted of a crime or offense?"
+Nonresident,非居民,"Have you ever called yourself a nonresident alien on a tax return?"
+Nonresident alien,非居民外僑,"Have you ever called yourself a nonresident alien on a tax return?"
+Alien,外國人/外僑,"Have you ever called yourself a nonresident alien on a tax return?"
+person,人,"Have you EVER used any person under 15 years of age to take part in hostilities?"
+Prostitution,賣淫者/賣淫,"Have you EVER engaged in prostitution?"
+Prostitute,賣淫者/賣淫,"Have you EVER attempted to procure prostitutes?"
+Gamble,賭博,"Have you EVER gambled illegally?"
+Gambling,賭博,"Have you EVER received income from illegal gambling?"
+FALSE,虛假,"Have you EVER given any U.S. Government officials any information that was false?"
+Truth,真相,"Do you promise that everything you say is true?"
+Lie,說謊,"Have you EVER lied to any U.S. Government officials to gain entry?"
+Habitual drunkard,習慣性酗酒者,"Have you EVER been a habitual drunkard?"
+Polygamy,多配偶制,"Have you EVER been married to more than one person at the same time?"
+Anywhere in the world,世界任何地方,"Have you EVER been a member of a Communist party anywhere in the world?"
+previous,之前的,"What's your previous address?"
+previously,之前的,"Where did you live previously?"
+purpose,目的,"What's the purpose of you being here today?"
+reason,原因,"What's the reason of you being here today?"
+basis,基準,"What's the basis of filing this form?"
+nationality,國籍,"What's your nationality?"
+spouse,配偶,"What's your spouse's name?"
+Marital status,婚姻狀態,"What's your current marital status?"
+trip,旅程,"How many trips did you take during the last five years?"
+travel,旅行,"Where did you go for travel during the last five years?"
+travel aboard,出國旅行,"Did you travel abroad after submitting your N-400 application form?"
+vacation,假日,"Where did you go for your last vacation?"
+Ethnicity,種族,"What's your ethnicity?"
