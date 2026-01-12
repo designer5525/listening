@@ -57,20 +57,14 @@ async function togglePlay() {
 // 3. 讀取 CSV (假設檔案名為 vocabulary.csv)
 async function loadCSV() {
     try {
-        const timestamp = new Date().getTime();
         const response = await fetch('vocabulary.csv');
         const data = await response.text();
         const lines = data.split('\n').filter(line => line.trim() !== "");
-
-        // 自動判斷標題行
-        const hasHeader = lines[0].toLowerCase().includes("word");
-        const dataLines = hasHeader ? lines.slice(1) : lines;
         
         vocabulary = lines.slice(1).map(line => {
             const [word, translation, example] = line.split(',');
             return { word, translation, example };
         });
-        console.log("最新詞庫載入成功");
     } catch (e) {
         updateStatus("詞庫載入失敗");
     }
