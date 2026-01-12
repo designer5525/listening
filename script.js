@@ -41,7 +41,6 @@ async function togglePlay() {
             }
             await new Promise(r => setTimeout(r, 500));
         }
-        // ----------------------------------------------
         
         runStudyLoop();
     } else {
@@ -75,15 +74,6 @@ async function runStudyLoop() {
     while (isPlaying && currentIndex < vocabulary.length) {
         const item = vocabulary[currentIndex];
         updateStatus(`正在學習: ${item.word}`);
-
-        // A. 播放倒數三聲
-        for (let i = 0; i < 3; i++) {
-            if (!isPlaying) return;
-            beep.currentTime = 0;
-            beep.play();
-            await new Promise(r => setTimeout(r, 700));
-        }
-        await new Promise(r => setTimeout(r, 500));
 
         // B. 重複播放兩遍
         for (let j = 0; j < 2; j++) {
