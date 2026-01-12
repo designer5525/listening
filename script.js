@@ -7,6 +7,9 @@ const beep = document.getElementById('beep-sound');
 
 window.speechSynthesis.onvoiceschanged = () => { synth.getVoices(); };
 
+// 在 script.js 最上方定義一個變數，防止被回收
+let activeUtterance = null;
+
 // 可中斷的等待函數
 function interruptibleTimeout(ms) {
     return new Promise((resolve) => {
@@ -98,6 +101,10 @@ async function runStudyLoop() {
 
         if (isPlaying) {
             currentIndex++;
+            // 每 10 題重置一次語音引擎，清除潛在的緩存阻塞
+            if (currentIndex % 10 === 0) {
+            window.speechSynthesis.cancel();
+            }
             // 【黑屏修復】每學完一個詞，微調靜音檔進度，防止系統休眠
             const silentLoop = document.getElementById('silent-loop');
             silentLoop.currentTime = (silentLoop.currentTime > 10) ? 0 : silentLoop.currentTime + 0.1;
@@ -120,7 +127,8 @@ function speak(text, lang) {
     return new Promise((resolve) => {
         if (!isPlaying) { resolve(); return; }
         
-        const utterance = new SpeechSynthesisUtterance(text);
+        // 建立物件並賦值給全局變數，防止垃圾回收
+        activeUtterance = new SpeechSynthesisUtterance(text);
         const voices = synth.getVoices();
 
         // 語音選擇邏輯 (保持不變)
@@ -135,6 +143,10 @@ function speak(text, lang) {
             if (enVoice) utterance.voice = enVoice;
             utterance.rate = 0.9;
         }
+        activeUtterance.onend = () => {
+            activeUtterance = null; // 結束後釋放
+            resolve();
+        };
 
         utterance.onend = resolve;
         utterance.onerror = resolve;
