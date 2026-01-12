@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>媽媽的單詞聽力練習</title>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
+        <div id="status-display" class="status-text">點擊下方按鈕開始</div>
+        
         <button class="btn main-action-btn colorful" id="main-btn" onclick="togglePlay()">
             開始<br>學習
         </button>
-        
-        <div id="status-display" class="status-text">點擊按鈕開始</div>
     </div>
 
-    <audio id="beep-sound" src="beep.mp3"></audio>
+    <audio id="beep-sound" src="beep.mp3" preload="auto" playsinline></audio>
 
     <script src="script.js"></script>
 </body>
