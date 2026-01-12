@@ -1,3 +1,13 @@
+let voices = [];
+window.speechSynthesis.onvoiceschanged = () => {
+    voices = window.speechSynthesis.getVoices();
+    console.log("語音庫已載入", voices.length);
+};
+// 頁面加載時先靜音播放一個空字串，這能「喚醒」某些手機瀏覽器的語音引擎
+window.addEventListener('touchstart', () => {
+    const silent = new SpeechSynthesisUtterance('');
+    window.speechSynthesis.speak(silent);
+}, { once: true });
 let vocabulary = [];
 let currentIndex = 0;
 let isPlaying = false;
