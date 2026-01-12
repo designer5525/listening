@@ -1,113 +1,128 @@
-let voices = [];
-window.speechSynthesis.onvoiceschanged = () => {
-    voices = window.speechSynthesis.getVoices();
-    console.log("語音庫已載入", voices.length);
-};
-// 頁面加載時先靜音播放一個空字串，這能「喚醒」某些手機瀏覽器的語音引擎
-window.addEventListener('touchstart', () => {
-    const silent = new SpeechSynthesisUtterance('');
-    window.speechSynthesis.speak(silent);
-}, { once: true });
 let vocabulary = [];
 let currentIndex = 0;
 let isPlaying = false;
 const synth = window.speechSynthesis;
+const beep = document.getElementById('beep-sound');
 
-// 1. 讀取 CSV
-async function loadCSV() {
-    const response = await fetch('vocabulary.csv');
-    const data = await response.text();
-    const lines = data.split('\n').slice(1); // 跳過標題列
-    vocabulary = lines.map(line => {
-        const [word, translation, example] = line.split(',');
-        return { word, translation, example };
-    });
-}
+// 1. 初始化語音庫（解決某些瀏覽器延遲載入問題）
+window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+};
 
 // 2. 主按鈕控制
-function togglePlay() {
+async function togglePlay() {
+    // 【關鍵】在點擊瞬間解鎖音訊標籤與語音引擎
+    beep.play().then(() => {
+        beep.pause();
+        beep.currentTime = 0;
+    }).catch(e => console.log("音效預解鎖失敗"));
+
+    const silent = new SpeechSynthesisUtterance("");
+    synth.speak(silent);
+
     const btn = document.getElementById('main-btn');
+    
     if (!isPlaying) {
         isPlaying = true;
-        btn.innerHTML = "暫停<br>學習";
         btn.classList.remove('colorful');
-        startLearning();
-    } else {
-        isPlaying = false;
-        btn.innerHTML = "繼續<br>學習";
-        btn.classList.add('colorful');
-        synth.cancel(); // 停止所有發聲
-    }
-}
-
-// 3. 播放邏輯
-async function startLearning() {
-    if (vocabulary.length === 0) await loadCSV();
-    
-    // 滴滴滴三聲倒數
-    await playCountdown();
-
-    while (currentIndex < vocabulary.length && isPlaying) {
-        const item = vocabulary[currentIndex];
+        btn.innerHTML = "暫停<br>學習";
+        updateStatus("準備中...");
         
-        for (let i = 0; i < 2; i++) { // 重複兩遍
-            if (!isPlaying) return;
-            
-            await speak(item.word, 'en-US');         // 念英文
-            await sleep(1000);                      // 間隔 1s
-            await speak(item.translation, 'zh-CN');  // 念中文
-            await sleep(1000);                      // 間隔 1s
-            await speak(item.example, 'en-US');      // 念例句
-            await sleep(1000);                      // 每遍結束後的短間隔
+        // 第一次點擊時載入 CSV
+        if (vocabulary.length === 0) {
+            await loadCSV();
         }
         
-        currentIndex++;
-        await sleep(2000); // 念完兩遍後停頓 2s 下一單詞
+        runStudyLoop();
+    } else {
+        isPlaying = false;
+        btn.classList.add('colorful');
+        btn.innerHTML = "繼續<br>學習";
+        updateStatus("已暫停");
+        synth.cancel(); // 立即停止發聲
     }
 }
 
-// 輔助工具：語音播放
+// 3. 讀取 CSV (假設檔案名為 vocabulary.csv)
+async function loadCSV() {
+    try {
+        const response = await fetch('vocabulary.csv');
+        const data = await response.text();
+        const lines = data.split('\n').filter(line => line.trim() !== "");
+        vocabulary = lines.slice(1).map(line => {
+            const [word, translation, example] = line.split(',');
+            return { word, translation, example };
+        });
+    } catch (e) {
+        updateStatus("詞庫載入失敗");
+    }
+}
+
+// 4. 核心學習循環
+async function runStudyLoop() {
+    while (isPlaying && currentIndex < vocabulary.length) {
+        const item = vocabulary[currentIndex];
+        updateStatus(`正在學習: ${item.word}`);
+
+        // A. 播放倒數三聲
+        for (let i = 0; i < 3; i++) {
+            if (!isPlaying) return;
+            beep.currentTime = 0;
+            beep.play();
+            await new Promise(r => setTimeout(r, 700));
+        }
+        await new Promise(r => setTimeout(r, 500));
+
+        // B. 重複播放兩遍
+        for (let j = 0; j < 2; j++) {
+            if (!isPlaying) return;
+            await speak(item.word, 'en-US');         // 念英文
+            await new Promise(r => setTimeout(r, 1000));
+            await speak(item.translation, 'zh-CN');  // 念中文
+            await new Promise(r => setTimeout(r, 1000));
+            await speak(item.example, 'en-US');      // 念例句
+            await new Promise(r => setTimeout(r, 1500));
+        }
+
+        currentIndex++;
+        await new Promise(r => setTimeout(r, 1000)); // 單詞間停頓
+    }
+    
+    if (currentIndex >= vocabulary.length) {
+        updateStatus("全部學習完成！");
+        isPlaying = false;
+        document.getElementById('main-btn').classList.add('colorful');
+        document.getElementById('main-btn').innerHTML = "重新<br>學習";
+        currentIndex = 0;
+    }
+}
+
+// 5. 優化語音播放 (強制尋找 Google 高品質中文)
 function speak(text, lang) {
     return new Promise((resolve) => {
         const utterance = new SpeechSynthesisUtterance(text);
-        
-        // 取得系統所有可用的聲音
-        const voices = window.speechSynthesis.getVoices();
-        
-        if (lang === 'zh-CN' || lang === 'zh-Hant') {
-            // 優先尋找高品質的中文聲音
-            const zhVoice = voices.find(v => 
-                (v.lang.includes('zh') || v.lang.includes('CN')) && 
-                (v.name.includes('Google') || v.name.includes('Mainland') || v.name.includes('Xiaoxiao'))
-            );
+        const voices = synth.getVoices();
+
+        if (lang === 'zh-CN') {
+            // 優先找 Google 或系統的高品質普通話女聲
+            const zhVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('zh-CN')) ||
+                            voices.find(v => v.name.includes('Xiaoxiao')) || 
+                            voices.find(v => v.lang.includes('zh-CN'));
             if (zhVoice) utterance.voice = zhVoice;
-            
-            utterance.rate = 0.85; // 中文稍微放慢，媽媽聽得更清楚
-            utterance.pitch = 1.0; // 音調保持自然
+            utterance.rate = 0.8; // 稍微慢一點
         } else {
-            // 英文聲音優化
-            const enVoice = voices.find(v => v.lang.includes('en') && v.name.includes('Google'));
+            const enVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('en-US')) ||
+                            voices.find(v => v.lang.includes('en-US'));
             if (enVoice) utterance.voice = enVoice;
-            utterance.rate = 0.8; // 英文例句也要慢一點
+            utterance.rate = 0.75;
         }
 
         utterance.onend = resolve;
-        
-        // 處理某些瀏覽器語音中斷的臭蟲
-        utterance.onerror = (event) => {
-            console.error('語音錯誤:', event);
-            resolve();
-        };
-
-        window.speechSynthesis.speak(utterance);
+        utterance.onerror = resolve;
+        synth.speak(utterance);
     });
 }
-// 輔助工具：滴滴滴倒數
-async function playCountdown() {
-    const beep = document.getElementById('beep-sound');
-    for (let i = 0; i < 3; i++) {
-        beep.play();
-        await sleep(600); // 滴聲之間的間隔
-    }
-    await sleep(400); // 滴完後進入單詞前的緩衝
+
+function updateStatus(msg) {
+    document.getElementById('status-display').innerText = msg;
 }
