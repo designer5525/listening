@@ -14,20 +14,34 @@ async function togglePlay() {
     const silentLoop = document.getElementById('silent-loop');
     
     // 【關鍵】解鎖音訊與語音
-    const silent = new SpeechSynthesisUtterance("");
-    synth.speak(silent);
-
-    const btn = document.getElementById('main-btn');
-    
-    if (!isPlaying) {
-        isPlaying = true;
-        silentLoop.play(); 
-        btn.classList.remove('colorful');
-        btn.innerHTML = "暫停<br>學習";
-        updateStatus("準備中...");
+async function loadCSV() {
+    try {
+        // 在網址後加上時間戳記（?t=...），讓瀏覽器以為這是一個新請求
+        const timestamp = new Date().getTime();
+        const response = await fetch(`vocabulary.csv?t=${timestamp}`);
         
-        if (vocabulary.length === 0) {
-            await loadCSV();
+        const data = await response.text();
+        const lines = data.split(/\r?\n/).filter(line => line.trim() !== "");
+        
+        // 自動判斷標題行
+        const hasHeader = lines[0].toLowerCase().includes("word");
+        const dataLines = hasHeader ? lines.slice(1) : lines;
+
+        vocabulary = dataLines.map(line => {
+            const parts = line.split(',');
+            return {
+                word: parts[0] ? parts[0].trim() : "",
+                translation: parts[1] ? parts[1].trim() : "",
+                // 如果你已經把例句裡的逗號換成了 /，這裡能完美讀取
+                example: parts[2] ? parts[2].trim() : ""
+            };
+        });
+        console.log("最新詞庫載入成功");
+    } catch (e) {
+        updateStatus("詞庫載入失敗");
+        console.error(e);
+    }
+}
         }
 
         // --- 修改處：僅在第一次開始（索引為 0）時響 3 次 ---
