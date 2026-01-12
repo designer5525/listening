@@ -25,6 +25,11 @@ async function togglePlay() {
     const btn = document.getElementById('main-btn');
 
     if (!isPlaying) {
+        // --- 【核心修復】Safari 專用解鎖 ---
+        // 在用戶點擊的這一刻，立即發送一個空語音，這會獲取 Safari 的語音播放權限
+        const unlockUtterance = new SpeechSynthesisUtterance("");
+        synth.speak(unlockUtterance);
+        
         isPlaying = true;
         silentLoop.play();
         btn.classList.remove('colorful');
@@ -115,7 +120,6 @@ function speak(text, lang) {
     return new Promise((resolve) => {
         if (!isPlaying) { resolve(); return; }
         
-        synth.cancel(); // 確保語音通道乾淨
         const utterance = new SpeechSynthesisUtterance(text);
         const voices = synth.getVoices();
 
