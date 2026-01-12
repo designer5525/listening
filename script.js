@@ -106,15 +106,17 @@ function speak(text, lang) {
         if (lang === 'zh-CN') {
             // 優先找 Google 或系統的高品質普通話女聲
             const zhVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('zh-CN')) ||
-                            voices.find(v => v.name.includes('Xiaoxiao')) || 
+                            voices.find(v => v.name.includes('Premium') && v.lang.includes('zh')) ||
+                            voices.find(v => (v.name.includes('Ting-Ting') || v.name.includes('Mei-Jia')) && v.lang.includes('zh')) ||
                             voices.find(v => v.lang.includes('zh-CN'));
             if (zhVoice) utterance.voice = zhVoice;
-            utterance.rate = 0.8; // 稍微慢一點
+            utterance.rate = 0.95; // 稍微慢一點
         } else {
             const enVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('en-US')) ||
+                            voices.find(v => v.name.includes('Samantha') && v.name.includes('Enhanced')) ||
                             voices.find(v => v.lang.includes('en-US'));
             if (enVoice) utterance.voice = enVoice;
-            utterance.rate = 0.75;
+            utterance.rate = 0.9;
         }
 
         utterance.onend = resolve;
