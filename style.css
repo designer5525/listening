@@ -1,0 +1,23 @@
+.main-action-btn {
+    width: 250px; /* 加大尺寸 */
+    height: 250px;
+    font-size: 32px; /* 字體加大 */
+    border-radius: 50%;
+    border: 8px solid #f0f0f0; /* 預設邊框 */
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* 初始/暫停狀態（藍紫色） */
+.main-action-btn.colorful {
+    border-color: #5856D6;
+    color: #5856D6;
+    box-shadow: 0 10px 20px rgba(88, 86, 214, 0.3);
+}
+
+/* 播放中狀態（變色提醒） */
+.main-action-btn:not(.colorful) {
+    border-color: #ff9500; /* 播放中變橘色，提醒正在運行 */
+    color: #ff9500;
+}
