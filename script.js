@@ -12,12 +12,8 @@ window.speechSynthesis.onvoiceschanged = () => {
 // 2. 主按鈕控制
 async function togglePlay() {
     const silentLoop = document.getElementById('silent-loop');
-    // 【關鍵】在點擊瞬間解鎖音訊標籤與語音引擎
-    beep.play().then(() => {
-        beep.pause();
-        beep.currentTime = 0;
-    }).catch(e => console.log("音效預解鎖失敗"));
-
+    
+    // 【關鍵】解鎖音訊與語音
     const silent = new SpeechSynthesisUtterance("");
     synth.speak(silent);
 
@@ -25,15 +21,27 @@ async function togglePlay() {
     
     if (!isPlaying) {
         isPlaying = true;
-        silentLoop.play(); // 啟動背景靜音軌，保住後台權限
+        silentLoop.play(); 
         btn.classList.remove('colorful');
         btn.innerHTML = "暫停<br>學習";
         updateStatus("準備中...");
         
-        // 第一次點擊時載入 CSV
         if (vocabulary.length === 0) {
             await loadCSV();
         }
+
+        // --- 修改處：僅在第一次開始（索引為 0）時響 3 次 ---
+        if (currentIndex === 0) {
+            updateStatus("準備開始...");
+            for (let i = 0; i < 3; i++) {
+                if (!isPlaying) break;
+                beep.currentTime = 0;
+                beep.play().catch(e => console.log(e));
+                await new Promise(r => setTimeout(r, 700));
+            }
+            await new Promise(r => setTimeout(r, 500));
+        }
+        // ----------------------------------------------
         
         runStudyLoop();
     } else {
@@ -43,7 +51,7 @@ async function togglePlay() {
         btn.classList.add('colorful');
         btn.innerHTML = "繼續<br>學習";
         updateStatus("已暫停");
-        synth.cancel(); // 立即停止發聲
+        synth.cancel(); 
     }
 }
 
